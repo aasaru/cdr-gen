@@ -2,6 +2,8 @@ package com.cdr.gen;
 
 import org.joda.time.Interval;
 
+import java.math.*;
+
 /**
  * Holds information about a call.
  * @author Maycon Viana Bordin <mayconbordin@gmail.com>
@@ -62,5 +64,12 @@ public class Call {
         this.destPhoneNumber = destPhoneNumber;
     }
     
-    
+    public BigDecimal getBytes() {
+      return BigDecimal.valueOf(time.toDuration().getStandardSeconds()*1000, 3);
+    }
+
+    public Double getKiloBytes() {
+      return getBytes().divide(BigDecimal.valueOf(1000000, 3), RoundingMode.UP).doubleValue();
+    }
+
 }

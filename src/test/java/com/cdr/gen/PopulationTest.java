@@ -2,7 +2,8 @@ package com.cdr.gen;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
+import java.util.*;
+
 import junit.framework.TestCase;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -20,7 +21,7 @@ public class PopulationTest extends TestCase {
      * Test of create method, of class Population.
      */
     public void testCreate() {
-        Population population = new Population(generator.getConfig());
+        Population population = new Population(generator.getConfig(), Arrays.asList("666","677","788"));
         population.create();
         
         int popSize = population.getPopulation().size();

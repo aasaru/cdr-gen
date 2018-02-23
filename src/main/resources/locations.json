@@ -1,0 +1,21 @@
+[
+  {
+    "day": 1,
+    "month": -1,
+    "time": "00:00:00",
+    "TADIG": "ESTRE",
+    "PLMN": "ELIEE",
+    "MCC": "248",
+    "MCN": "02"
+  },
+  {
+    "day": 3,
+    "month": -1,
+    "time": "15:30:00",
+    "TADIG": "ESTRE",
+    "PLMN": "ELIEE",
+    "MCC": "248",
+    "MCN": "02"
+  }
+
+]

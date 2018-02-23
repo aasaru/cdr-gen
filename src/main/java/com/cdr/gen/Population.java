@@ -20,7 +20,7 @@ import org.joda.time.format.DateTimeFormat;
  */
 public class Population {
     private static final Logger LOG = Logger.getLogger(Population.class);
-    private int size;
+    private List<String> aNumbers;
     private Map<String, Long> callsMade;
     private Map<String, Long> phoneLines;
     private List<String> callTypes;
@@ -34,13 +34,15 @@ public class Population {
     
     private Random random;
     
-    public Population(Map<String, Object> config) {
-        this.size  = ((Long)config.get("numAccounts")).intValue();
+    public Population(Map<String, Object> config, List<String> aNumbers) {
+        this.aNumbers  = aNumbers;
+
+
         callsMade  = (Map<String, Long>) config.get("callsMade");
         phoneLines = (Map<String, Long>) config.get("phoneLines");
         callTypes  = (List<String>) config.get("callTypes");
         outgoingCallParams = (Map<String, Object>) config.get("outgoingCallParams");
-        population = new ArrayList<Person>(size);
+        population = new ArrayList<Person>(aNumbers.size());
         
         callDist = new CallDistribution(config);
         dateTimeDist = new DateTimeDistribution(config);
@@ -56,14 +58,14 @@ public class Population {
     public void create() {
         RandomGaussian gaussNum;
         
-        for (int i=0; i<size; i+=2) {
-            LOG.info("Creating person " + (i+1) + " and " + (i+2));
+        for (int i=0; i<aNumbers.size(); i++) {
+            LOG.info("Creating person " + (i+1) );
             Person personOne = new Person();
             Person personTwo = new Person();
             
             // create the phone number
             LOG.info("Generating phone numbers");
-            personOne.setPhoneNumber(getRandomPhoneNumber());
+            personOne.setPhoneNumber(aNumbers.get(i));
             personTwo.setPhoneNumber(getRandomPhoneNumber());
             
             // calculate the number of calls made
@@ -107,8 +109,8 @@ public class Population {
             LOG.info("Creating the calls for person " + (i+1));
             createCalls(personOne);
             
-            LOG.info("Creating the calls for person " + (i+2));
-            createCalls(personTwo);
+            //LOG.info("Creating the calls for person " + (i+2));
+            //createCalls(personTwo);
 
             population.add(personOne);
             population.add(personTwo);

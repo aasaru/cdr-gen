@@ -1,21 +1,15 @@
 package com.cdr.gen;
 
 import com.cdr.gen.util.IOUtils;
-import com.cdr.gen.util.JavaUtils;
-import com.google.common.io.Files;
-import java.io.File;
+
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import org.apache.commons.text.StrSubstitutor;
 import org.apache.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * This class only loads the configuration file and handles the saving of the population
@@ -24,65 +18,67 @@ import org.json.simple.parser.ParseException;
  */
 public final class CDRGen {
     private static final Logger LOG = Logger.getLogger(CDRGen.class);
-    private static final String DEFAULT_CONFIG_FILE = "/config.json";
+    public static final String DEFAULT_CONFIG_FILE = "/config.json";
+    private static final String DEFAULT_ANUMBERS = "555057,555058";
     private Map<String, Object> config;
     
     public CDRGen() {
-        loadConfig(DEFAULT_CONFIG_FILE);
+        IOUtils.loadConfig(DEFAULT_CONFIG_FILE);
     }
 
     public CDRGen(String configFile) {
-        loadConfig(configFile);
-    }
-    
-    public void loadConfig(String file) {
-        try {
-            JSONParser parser = new JSONParser();
-            String configStr;
-            
-            if (JavaUtils.isJar() && file.equals(DEFAULT_CONFIG_FILE)) {
-                InputStream is = CDRGen.class.getResourceAsStream(file);
-                configStr = IOUtils.convertStreamToString(is);
-            } else {
-                if (file.equals(DEFAULT_CONFIG_FILE)) 
-                    file = "src/main/resources" + file;
-                
-                configStr = Files.toString(new File(file), Charset.defaultCharset());
-            }
-            
-            config = (JSONObject) parser.parse(configStr);
-        } catch (IOException ex) {
-            LOG.error("Unable to read config file '" + file + "'.", ex);
-        } catch (ParseException ex) {
-            LOG.error("Error parsing the config file '" + file + "'.", ex);
-        }
+        config = IOUtils.loadConfig(configFile);
     }
 
-    public Map<String, Object> getConfig() {
+  public Map<String, Object> getConfig() {
         return config;
+    }
+
+    public String getValueFromConfig(String key) {
+
+      Object value = config.get(key);
+      if (value == null) {
+        throw new IllegalArgumentException("Not found key " + key + " from config file");
+      }
+      return String.valueOf(value);
     }
     
     public void saveToFile(String outputFile, List<Person> customers) {
-        DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy");
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm:ss");
-            
+      DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy");
+      DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm:ss");
+      DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(getValueFromConfig("cdrDateTimePattern"));
+
         try {
             FileWriter fw = new FileWriter(outputFile);
             String newLine = System.getProperty("line.separator");
             
             for (Person p : customers) {
                 for (Call c : p.getCalls()) {
-                    fw.append(c.getId() + ","
-                            + p.getPhoneNumber() + ","
-                            + c.getLine() + ","
-                            + c.getDestPhoneNumber() + ","
-                            + c.getTime().getStart().toString(dateFormatter) + "," 
-                            + c.getTime().getEnd().toString(dateFormatter) + "," 
-                            + c.getTime().getStart().toString(timeFormatter) + "," 
-                            + c.getTime().getEnd().toString(timeFormatter) + ","
-                            + c.getType() + ","
-                            + c.getCost()
-                            + newLine);
+
+                  Map<String, String> values = new HashMap<String, String>();
+                  values.put("id", String.valueOf(c.getId()));
+                  values.put("sourcePhoneNumber", p.getPhoneNumber());
+                  values.put("line", String.valueOf(c.getLine()));
+                  values.put("destPhoneNumber", c.getDestPhoneNumber());
+                  values.put("originalUnits", "0");
+                  values.put("calculatedUnits", "0");
+
+                  values.put("startDate", c.getTime().getStart().toString(dateFormatter));
+                  values.put("endDate", c.getTime().getEnd().toString(dateFormatter));
+                  values.put("startTime", c.getTime().getStart().toString(timeFormatter));
+                  values.put("endTime", c.getTime().getEnd().toString(timeFormatter));
+                  values.put("startDateTime", c.getTime().getStart().toString(dateTimeFormatter));
+                  values.put("endDateTime", c.getTime().getEnd().toString(dateTimeFormatter));
+
+                  values.put("bytes", String.valueOf(c.getBytes()));
+                  values.put("kiloBytes", String.valueOf(c.getKiloBytes()));
+
+                  values.put("type", c.getType());
+                  values.put("cost", String.valueOf(c.getCost()));
+
+                  StrSubstitutor sub = new StrSubstitutor(values);
+
+                  fw.append(sub.replace(config.get("cdrFilePattern"))).append(newLine);
                 }
             }
 
@@ -91,7 +87,6 @@ public final class CDRGen {
             LOG.error("Error while writing the output file.", ex);
         } 
     }
-    
     
     public static void main( String[] args ) {
         if (args.length == 0) {
@@ -102,10 +97,16 @@ public final class CDRGen {
         }
 
         String configFile = (args.length > 1) ? args[1] : DEFAULT_CONFIG_FILE;
+
+        String aNumbersCommaSeparatedList = (args.length > 2) ? args[2] : DEFAULT_ANUMBERS;
+        List<String> aNumbers = Arrays.asList(aNumbersCommaSeparatedList.split(","));
+
         CDRGen generator = new CDRGen(configFile);
         
-        Population population = new Population(generator.getConfig());
+        Population population = new Population(generator.getConfig(), aNumbers);
         population.create();
+
+        SimCurrentLocation simCurrentLocation = new SimCurrentLocation();
         
         List<Person> customers = population.getPopulation();
         generator.saveToFile(args[0], customers);
