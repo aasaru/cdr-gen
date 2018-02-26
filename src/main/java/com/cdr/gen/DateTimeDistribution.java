@@ -63,10 +63,10 @@ public class DateTimeDistribution {
         loadDayDist((Map<String, Double>) config.get("dayDistribution"));
         
         dateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy");
-        dateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+        dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm");
         
-        startDate = dateFormatter.parseDateTime((String)config.get("startDate"));
-        endDate = dateFormatter.parseDateTime((String)config.get("endDate"));
+        startDate = dateTimeFormatter.parseDateTime((String)config.get("startDate"));
+        endDate = dateTimeFormatter.parseDateTime((String)config.get("endDate"));
         
         Interval interval = new Interval(startDate, endDate);
         Duration duration = interval.toDuration();

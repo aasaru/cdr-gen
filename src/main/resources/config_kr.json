@@ -8,7 +8,7 @@
         "stdDev": 5
     },
     "numAccounts": 200,
-    "cdrFilePattern": "${id},${sourcePhoneNumber},${tadig},${type},${bytes},${kiloBytes},${cost},${startDateTime},${endDateTime}",
+    "cdrFilePattern": "${id},${sourcePhoneNumber},${mcc},${type},${bytes},${kiloBytes},${cost},${startDateTime},${endDateTime}",
     "cdrDateTimePattern": "yyyyMMdd_HHmmss",
     "callTypes": ["Zone 1"],
     "dayDistribution": {

@@ -10,8 +10,6 @@
     "numAccounts": 200,
     "cdrFilePattern": "${id},${sourcePhoneNumber},ESTRE,${type},${bytes},${kiloBytes},${cost},${startDateTime},${endDateTime}",
     "cdrDateTimePattern": "yyyyMMdd_HHmmss",
-    "startDate": "01/01/2018",
-    "endDate": "31/01/2018",
     "callTypes": ["Zone 1"],
     "dayDistribution": {
         "sun": 0.2222,

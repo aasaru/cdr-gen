@@ -2,14 +2,11 @@ package com.cdr.gen;
 
 import com.cdr.gen.util.RandomUtil;
 import com.cdr.gen.util.RandomGaussian;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+
+import java.util.*;
+
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
+import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 
 /**
@@ -20,6 +17,10 @@ import org.joda.time.format.DateTimeFormat;
  */
 public class Population {
     private static final Logger LOG = Logger.getLogger(Population.class);
+
+    private static final Long MAX_CALLS_PER_PERSON = 1000L;
+    private static final Long MAX_CALLERS = 100L;
+
     private List<String> aNumbers;
     private Map<String, Long> callsMade;
     private Map<String, Long> phoneLines;
@@ -57,11 +58,16 @@ public class Population {
      */
     public void create() {
         RandomGaussian gaussNum;
-        
-        for (int i=0; i<aNumbers.size(); i++) {
+
+      long baseId = (new Date()).getTime() * MAX_CALLERS * MAX_CALLS_PER_PERSON;
+
+
+      for (int i=0; i<aNumbers.size(); i++) {
             LOG.info("Creating person " + (i+1) );
             Person personOne = new Person();
             Person personTwo = new Person();
+
+            personOne.setBaseId(baseId + i * MAX_CALLS_PER_PERSON);
             
             // create the phone number
             LOG.info("Generating phone numbers");
@@ -186,7 +192,6 @@ public class Population {
         
         for (int i=0; i<p.getNumCalls(); i++) {
             Call call = new Call();
-            call.setId(i);
             call.setType(listOfCallTypes[i]);
             call.setLine((int) (random.nextDouble() * p.getPhoneLines() + 0.5));
             
@@ -216,8 +221,12 @@ public class Population {
         
             // after the date has been picked, calculate the cost of the call
             call.setCost(dateTimeDist.getCallCost(call));
-            
-            p.getCalls().add(call);
+            call.setId(p.getBaseId() + i);
+
+            if (call.getTime().getStart().isBefore(dateTimeDist.getEndDate())) {
+              p.getCalls().add(call);
+
+            }
         }
     }
     

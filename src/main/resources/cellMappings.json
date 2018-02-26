@@ -1,0 +1,23 @@
+{
+  "ESTRE1": {
+    "TADIG": "ESTRE1tadig",
+    "MCC": "ESTRE1mcc",
+    "XZONE": "Zone1"
+  },
+  "ESTRE2": {
+    "TADIG": "ESTRE2tadig",
+    "MCC": "ESTRE2mcc",
+    "XZONE": "Zone2"
+  },
+  "ESTRE3": {
+    "TADIG": "ESTRE3tadig",
+    "MCC": "ESTRE3mcc",
+    "XZONE": "Zone2"
+  },
+  "ESTRE4": {
+    "TADIG": "ESTRE4tadig",
+    "MCC": "ESTRE4mcc",
+    "XZONE": "Zone2"
+  }
+
+}

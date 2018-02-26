@@ -7,69 +7,80 @@ import java.util.Map;
 
 /**
  * Stores information about a person.
+ *
  * @author Maycon Viana Bordin <mayconbordin@gmail.com>
  */
 public class Person {
-    private String phoneNumber;
-    private int phoneLines;
-    
-    // summary info
-    private long numCalls;
-    
-    // model information about the call spread
-    private Map<String, Long> avgCallDuration = new HashMap<String, Long>();
-    private Map<String, Long> avgOffPeakCallDuration = new HashMap<String, Long>();
-    
-    private List<Call> calls;
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	private long baseId;
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	private String phoneNumber;
+	private int phoneLines;
 
-    public int getPhoneLines() {
-        return phoneLines;
-    }
+	// summary info
+	private long numCalls;
 
-    public void setPhoneLines(int phoneLines) {
-        this.phoneLines = phoneLines;
-    }
+	// model information about the call spread
+	private Map<String, Long> avgCallDuration = new HashMap<String, Long>();
+	private Map<String, Long> avgOffPeakCallDuration = new HashMap<String, Long>();
 
-    public long getNumCalls() {
-        return numCalls;
-    }
+	private List<Call> calls;
 
-    public void setNumCalls(long numCalls) {
-        this.numCalls = numCalls;
-        this.calls = new ArrayList<Call>(((Long)numCalls).intValue());
-    }
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
-    public Map<String, Long> getAvgCallDuration() {
-        return avgCallDuration;
-    }
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public void setAvgCallDuration(Map<String, Long> avgCallDuration) {
-        this.avgCallDuration = avgCallDuration;
-    }
+	public int getPhoneLines() {
+		return phoneLines;
+	}
 
-    public Map<String, Long> getAvgOffPeakCallDuration() {
-        return avgOffPeakCallDuration;
-    }
+	public void setPhoneLines(int phoneLines) {
+		this.phoneLines = phoneLines;
+	}
 
-    public void setAvgOffPeakCallDuration(Map<String, Long> avgOffPeakCallDuration) {
-        this.avgOffPeakCallDuration = avgOffPeakCallDuration;
-    }
+	public long getNumCalls() {
+		return numCalls;
+	}
 
-    public List<Call> getCalls() {
-        return calls;
-    }
+	public void setNumCalls(long numCalls) {
+		this.numCalls = numCalls;
+		this.calls = new ArrayList<Call>(((Long) numCalls).intValue());
+	}
 
-    public void setCalls(List<Call> calls) {
-        this.calls = calls;
-    }
-    
-    
+	public Map<String, Long> getAvgCallDuration() {
+		return avgCallDuration;
+	}
+
+	public void setAvgCallDuration(Map<String, Long> avgCallDuration) {
+		this.avgCallDuration = avgCallDuration;
+	}
+
+	public Map<String, Long> getAvgOffPeakCallDuration() {
+		return avgOffPeakCallDuration;
+	}
+
+	public void setAvgOffPeakCallDuration(Map<String, Long> avgOffPeakCallDuration) {
+		this.avgOffPeakCallDuration = avgOffPeakCallDuration;
+	}
+
+	public List<Call> getCalls() {
+		return calls;
+	}
+
+	public void setCalls(List<Call> calls) {
+		this.calls = calls;
+	}
+
+	public long getBaseId() {
+		return baseId;
+	}
+
+	public void setBaseId(long baseId) {
+		this.baseId = baseId;
+	}
+
 }

@@ -1,21 +1,23 @@
 [
   {
     "day": 1,
-    "month": -1,
     "time": "00:00:00",
-    "TADIG": "ESTRE",
-    "PLMN": "ELIEE",
-    "MCC": "248",
-    "MCN": "02"
+    "cellId": "ESTRE1"
   },
   {
     "day": 3,
-    "month": -1,
     "time": "15:30:00",
-    "TADIG": "ESTRE",
-    "PLMN": "ELIEE",
-    "MCC": "248",
-    "MCN": "02"
+    "cellId": "ESTRE2"
+  },
+  {
+    "day": 5,
+    "time": "11:00:00",
+    "cellId": "ESTRE3"
+  },
+  {
+    "day": 28,
+    "time": "13:00:00",
+    "cellId": "ESTRE4"
   }
 
 ]
